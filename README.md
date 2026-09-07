@@ -13,7 +13,7 @@ App pessoal para catalogar e acompanhar filmes assistidos, com busca de metadata
 ## Funcionalidades
 
 - [x] Setup do banco de dados (Movie, Challenge, ChallengeMovie)
-- [ ] Busca de filmes via TMDB
+- [x] Busca de filmes via TMDB
 - [ ] CRUD de filmes assistidos
 - [ ] Dashboard de estatísticas (gráficos por gênero, ano, nota, etc)
 - [ ] Sistema de desafios (challenges) de filmes
