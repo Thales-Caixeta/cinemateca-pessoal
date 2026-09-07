@@ -1,0 +1,49 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Movie {
+  id          Int      @id @default(autoincrement())
+  tmdbId      Int      @unique
+  title       String
+  posterPath  String?
+  releaseDate DateTime?
+  runtime     Int?
+  watched     Boolean  @default(false)
+  watchedAt   DateTime?
+  rating      Int?
+  notes       String?
+  createdAt   DateTime @default(now())
+
+  challengeMovies ChallengeMovie[]
+}
+
+model Challenge {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+  startDate   DateTime?
+  endDate     DateTime?
+  createdAt   DateTime @default(now())
+
+  challengeMovies ChallengeMovie[]
+}
+
+model ChallengeMovie {
+  id          Int      @id @default(autoincrement())
+  challengeId Int
+  movieId     Int
+
+  challenge Challenge @relation(fields: [challengeId], references: [id])
+  movie     Movie     @relation(fields: [movieId], references: [id])
+
+  @@unique([challengeId, movieId])
+}
