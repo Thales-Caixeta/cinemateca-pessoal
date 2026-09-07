@@ -1,36 +1,52 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🎬 Cinemateca Pessoal
 
-## Getting Started
+App pessoal para catalogar e acompanhar filmes assistidos, com busca de metadata via TMDB, estatísticas de consumo e desafios de filmes (challenges).
 
-First, run the development server:
+## Stack
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **Next.js** (App Router) + TypeScript
+- **Prisma 7** + SQLite (banco local)
+- **TailwindCSS** para estilo
+- **Recharts** para gráficos e estatísticas
+- **TMDB API** para metadata dos filmes (poster, sinopse, elenco, etc)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Funcionalidades
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- [x] Setup do banco de dados (Movie, Challenge, ChallengeMovie)
+- [ ] Busca de filmes via TMDB
+- [ ] CRUD de filmes assistidos
+- [ ] Dashboard de estatísticas (gráficos por gênero, ano, nota, etc)
+- [ ] Sistema de desafios (challenges) de filmes
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Rodando localmente
 
-## Learn More
+1. Clone o repositório
+2. Instale as dependências:
+   ```bash
+   npm install
+   ```
+3. Crie um arquivo `.env` na raiz com:
+   ```
+   DATABASE_URL="file:./dev.db"
+   TMDB_API_KEY="sua_chave_aqui"
+   ```
+   (gere sua chave gratuita em [themoviedb.org](https://www.themoviedb.org/settings/api))
+4. Rode as migrations do Prisma:
+   ```bash
+   npx prisma migrate dev
+   ```
+5. Suba o servidor:
+   ```bash
+   npm run dev
+   ```
+6. Acesse [http://localhost:3000](http://localhost:3000)
 
-To learn more about Next.js, take a look at the following resources:
+## Estrutura do banco
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **Movie** — filmes cadastrados, com `watched` como única fonte de verdade sobre estado de conclusão
+- **Challenge** — desafios/listas temáticas de filmes
+- **ChallengeMovie** — tabela de ligação entre desafios e filmes
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Projeto pessoal
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Este é um projeto pessoal em desenvolvimento contínuo, sem fins comerciais.
