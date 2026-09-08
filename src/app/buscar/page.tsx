@@ -14,6 +14,8 @@ export default function Home() {
   const [query, setQuery] = useState("");
   const [movies, setMovies] = useState<Movie[]>([]);
   const [loading, setLoading] = useState(false);
+  const [addingIds, setAddingIds] = useState<number[]>([]);
+  const [addedIds, setAddedIds] = useState<number[]>([]);
 
   async function handleSearch(e: React.FormEvent) {
     e.preventDefault();
@@ -30,6 +32,30 @@ export default function Home() {
       console.error("Erro ao buscar filmes:", error);
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function handleAdd(movie: Movie) {
+    setAddingIds((prev) => [...prev, movie.id]);
+    try {
+      const res = await fetch("/api/movies", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          tmdbId: movie.id,
+          title: movie.title,
+          posterPath: movie.poster_path,
+          releaseDate: movie.release_date || null,
+        }),
+      });
+
+      if (!res.ok) throw new Error("Falha ao salvar");
+
+      setAddedIds((prev) => [...prev, movie.id]);
+    } catch (error) {
+      console.error("Erro ao adicionar filme:", error);
+    } finally {
+      setAddingIds((prev) => prev.filter((id) => id !== movie.id));
     }
   }
 
@@ -57,37 +83,54 @@ export default function Home() {
         {loading && <p className="text-neutral-400">Buscando...</p>}
 
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-          {movies.map((movie) => (
-            <div
-              key={movie.id}
-              className="bg-neutral-900 rounded-lg overflow-hidden border border-neutral-800 hover:border-neutral-600 transition group"
-            >
-              <div className="aspect-[2/3] bg-neutral-800 relative">
-                {movie.poster_path ? (
-                  <img
-                    src={`https://image.tmdb.org/t/p/w342${movie.poster_path}`}
-                    alt={movie.title}
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center text-neutral-600 text-sm p-2 text-center">
-                    Sem poster
-                  </div>
-                )}
+          {movies.map((movie) => {
+            const isAdding = addingIds.includes(movie.id);
+            const isAdded = addedIds.includes(movie.id);
+
+            return (
+              <div
+                key={movie.id}
+                className="bg-neutral-900 rounded-lg overflow-hidden border border-neutral-800 hover:border-neutral-600 transition group"
+              >
+                <div className="aspect-[2/3] bg-neutral-800 relative">
+                  {movie.poster_path ? (
+                    <img
+                      src={`https://image.tmdb.org/t/p/w342${movie.poster_path}`}
+                      alt={movie.title}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-neutral-600 text-sm p-2 text-center">
+                      Sem poster
+                    </div>
+                  )}
+                </div>
+                <div className="p-3">
+                  <h3 className="font-medium text-sm line-clamp-2">
+                    {movie.title}
+                  </h3>
+                  <p className="text-neutral-500 text-xs mt-1">
+                    {movie.release_date?.slice(0, 4) || "—"}
+                  </p>
+                  <button
+                    onClick={() => handleAdd(movie)}
+                    disabled={isAdding || isAdded}
+                    className={`mt-2 w-full transition text-xs py-1.5 rounded ${
+                      isAdded
+                        ? "bg-emerald-600 cursor-default"
+                        : "bg-neutral-800 hover:bg-blue-600"
+                    }`}
+                  >
+                    {isAdded
+                      ? "✓ Adicionado"
+                      : isAdding
+                        ? "Adicionando..."
+                        : "+ Adicionar"}
+                  </button>
+                </div>
               </div>
-              <div className="p-3">
-                <h3 className="font-medium text-sm line-clamp-2">
-                  {movie.title}
-                </h3>
-                <p className="text-neutral-500 text-xs mt-1">
-                  {movie.release_date?.slice(0, 4) || "—"}
-                </p>
-                <button className="mt-2 w-full bg-neutral-800 hover:bg-blue-600 transition text-xs py-1.5 rounded">
-                  + Adicionar
-                </button>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </main>
