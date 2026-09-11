@@ -23,8 +23,6 @@ export async function POST(request: NextRequest) {
         posterPath: posterPath || null,
         releaseDate: releaseDate ? new Date(releaseDate) : null,
         runtime: runtime || null,
-        watched: true,
-        watchedAt: new Date(),
       },
     });
 
@@ -40,7 +38,7 @@ export async function POST(request: NextRequest) {
 
 export async function GET() {
   const movies = await prisma.movie.findMany({
-    orderBy: { watchedAt: "desc" },
+    orderBy: { createdAt: "desc" },
   });
   return NextResponse.json(movies);
 }
