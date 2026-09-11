@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 interface Movie {
@@ -71,53 +72,58 @@ export default function ColecaoPage() {
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-5">
             {movies.map((movie) => (
               <div key={movie.id} className="group">
-                <div className="aspect-[2/3] rounded-lg overflow-hidden bg-white/5 relative">
-                  {movie.posterPath ? (
-                    <img
-                      src={`https://image.tmdb.org/t/p/w342${movie.posterPath}`}
-                      alt={movie.title}
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center text-neutral-600 text-xs p-2 text-center">
-                      Sem poster
-                    </div>
-                  )}
+                <Link href={`/filme/${movie.id}`}>
+                  <div className="aspect-[2/3] rounded-lg overflow-hidden bg-white/5 relative">
+                    {movie.posterPath ? (
+                      <img
+                        src={`https://image.tmdb.org/t/p/w342${movie.posterPath}`}
+                        alt={movie.title}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-neutral-600 text-xs p-2 text-center">
+                        Sem poster
+                      </div>
+                    )}
 
-                  <button
-                    onClick={() => removeMovie(movie)}
-                    aria-label="Remover"
-                    className="absolute top-2 right-2 w-7 h-7 rounded-full bg-black/60 text-red-400 opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-sm"
-                  >
-                    ✕
-                  </button>
+                    {movie.watched && (
+                      <span className="absolute top-2 left-2 bg-emerald-500 text-white text-[10px] px-2 py-0.5 rounded-full">
+                        Assistido
+                      </span>
+                    )}
+                  </div>
+                </Link>
 
-                  {movie.watched && (
-                    <span className="absolute top-2 left-2 bg-emerald-500 text-white text-[10px] px-2 py-0.5 rounded-full">
-                      Assistido
-                    </span>
-                  )}
-                </div>
-
-                <p className="text-sm mt-2 line-clamp-2 leading-tight">
-                  {movie.title}
-                </p>
+                <Link href={`/filme/${movie.id}`}>
+                  <p className="text-sm mt-2 line-clamp-2 leading-tight hover:text-emerald-400 transition">
+                    {movie.title}
+                  </p>
+                </Link>
                 <p className="text-neutral-500 text-xs mb-2">
                   {movie.releaseDate
                     ? new Date(movie.releaseDate).getFullYear()
                     : "—"}
                 </p>
 
-                <button
-                  onClick={() => toggleWatched(movie)}
-                  className={`w-full text-xs py-1.5 rounded transition ${
-                    movie.watched
-                      ? "bg-white/5 text-neutral-400 hover:bg-white/10"
-                      : "bg-emerald-600 hover:bg-emerald-700 text-white"
-                  }`}
-                >
-                  {movie.watched ? "Desmarcar" : "Marcar como assistido"}
-                </button>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => toggleWatched(movie)}
+                    className={`flex-1 text-xs py-1.5 rounded transition ${
+                      movie.watched
+                        ? "bg-white/5 text-neutral-400 hover:bg-white/10"
+                        : "bg-emerald-600 hover:bg-emerald-700 text-white"
+                    }`}
+                  >
+                    {movie.watched ? "Desmarcar" : "Marcar assistido"}
+                  </button>
+                  <button
+                    onClick={() => removeMovie(movie)}
+                    aria-label="Remover"
+                    className="px-3 text-xs rounded bg-red-500/10 text-red-400 hover:bg-red-500/20 transition"
+                  >
+                    ✕
+                  </button>
+                </div>
               </div>
             ))}
           </div>

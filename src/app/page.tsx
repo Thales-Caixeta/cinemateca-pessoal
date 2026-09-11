@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import Link from "next/link";
 
 interface TmdbDetails {
   backdrop_path: string | null;
@@ -76,7 +77,11 @@ export default async function Home() {
             <span className="inline-block bg-white/10 text-neutral-200 text-xs font-medium px-3 py-1 rounded-full mb-3">
               adicionado recentemente
             </span>
-            <h1 className="text-4xl font-bold mb-2">{latestMovie.title}</h1>
+            <Link href={`/filme/${latestMovie.id}`}>
+              <h1 className="text-4xl font-bold mb-2 hover:text-neutral-300 transition">
+                {latestMovie.title}
+              </h1>
+            </Link>
             <p className="text-neutral-300 text-sm mb-5">
               {latestMovie.releaseDate
                 ? new Date(latestMovie.releaseDate).getFullYear()
@@ -90,9 +95,12 @@ export default async function Home() {
               {details?.runtime ? ` · ${details.runtime} min` : ""}
             </p>
             <div className="flex gap-3">
-              <button className="bg-white text-neutral-900 text-sm font-medium px-5 py-2.5 rounded-lg hover:bg-neutral-200 transition">
+              <Link
+                href={`/filme/${latestMovie.id}`}
+                className="bg-white text-neutral-900 text-sm font-medium px-5 py-2.5 rounded-lg hover:bg-neutral-200 transition"
+              >
                 Ver detalhes
-              </button>
+              </Link>
               <button className="bg-white/10 text-white text-sm px-5 py-2.5 rounded-lg hover:bg-white/20 transition">
                 + challenge
               </button>
@@ -144,13 +152,17 @@ export default async function Home() {
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-4">
             {recentMovies.map((movie) => (
-              <div key={movie.id}>
+              <Link
+                key={movie.id}
+                href={`/filme/${movie.id}`}
+                className="group"
+              >
                 <div className="aspect-[2/3] rounded-lg overflow-hidden bg-white/5">
                   {movie.posterPath ? (
                     <img
                       src={`https://image.tmdb.org/t/p/w342${movie.posterPath}`}
                       alt={movie.title}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center text-neutral-600 text-xs p-2 text-center">
@@ -158,7 +170,7 @@ export default async function Home() {
                     </div>
                   )}
                 </div>
-                <p className="text-sm mt-2 line-clamp-2 leading-tight">
+                <p className="text-sm mt-2 line-clamp-2 leading-tight group-hover:text-emerald-400 transition">
                   {movie.title}
                 </p>
                 <p className="text-neutral-500 text-xs">
@@ -166,7 +178,7 @@ export default async function Home() {
                     ? new Date(movie.releaseDate).getFullYear()
                     : "—"}
                 </p>
-              </div>
+              </Link>
             ))}
           </div>
         )}
