@@ -8,7 +8,7 @@ export async function POST(request: NextRequest) {
 
   if (!tmdbId || !title) {
     return NextResponse.json(
-      { error: "tmdbId e title são obrigatórios" },
+      { error: "tmdbId and title are required" },
       { status: 400 },
     );
   }
@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error(error);
     return NextResponse.json(
-      { error: "Erro ao salvar filme" },
+      { error: "Failed to save movie" },
       { status: 500 },
     );
   }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface Movie {
   id: number;
@@ -10,12 +10,26 @@ interface Movie {
   overview: string;
 }
 
-export default function Home() {
+export default function SearchPage() {
   const [query, setQuery] = useState("");
   const [movies, setMovies] = useState<Movie[]>([]);
   const [loading, setLoading] = useState(false);
   const [addingIds, setAddingIds] = useState<number[]>([]);
-  const [addedIds, setAddedIds] = useState<number[]>([]);
+  const [savedTmdbIds, setSavedTmdbIds] = useState<number[]>([]);
+
+  useEffect(() => {
+    loadSavedIds();
+  }, []);
+
+  async function loadSavedIds() {
+    try {
+      const res = await fetch("/api/movies", { cache: "no-store" });
+      const data = await res.json();
+      setSavedTmdbIds(data.map((m: { tmdbId: number }) => m.tmdbId));
+    } catch (error) {
+      console.error("Failed to load collection:", error);
+    }
+  }
 
   async function handleSearch(e: React.FormEvent) {
     e.preventDefault();
@@ -29,7 +43,7 @@ export default function Home() {
       const data = await res.json();
       setMovies(data.results || []);
     } catch (error) {
-      console.error("Erro ao buscar filmes:", error);
+      console.error("Failed to search movies:", error);
     } finally {
       setLoading(false);
     }
@@ -49,11 +63,11 @@ export default function Home() {
         }),
       });
 
-      if (!res.ok) throw new Error("Falha ao salvar");
+      if (!res.ok) throw new Error("Failed to save");
 
-      setAddedIds((prev) => [...prev, movie.id]);
+      setSavedTmdbIds((prev) => [...prev, movie.id]);
     } catch (error) {
-      console.error("Erro ao adicionar filme:", error);
+      console.error("Failed to add movie:", error);
     } finally {
       setAddingIds((prev) => prev.filter((id) => id !== movie.id));
     }
@@ -62,37 +76,39 @@ export default function Home() {
   return (
     <main className="min-h-screen text-neutral-100 p-8">
       <div className="max-w-6xl mx-auto">
-        <h1 className="text-3xl font-bold mb-6">🎬 Cinemateca Pessoal</h1>
+        <h1 className="font-[family-name:var(--font-fraunces)] text-4xl font-semibold mb-6">
+          Search Movies
+        </h1>
 
         <form onSubmit={handleSearch} className="flex gap-2 mb-8">
           <input
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Buscar filme..."
-            className="flex-1 bg-neutral-900 border border-neutral-700 rounded-lg px-4 py-2 outline-none focus:border-neutral-400 transition"
+            placeholder="Search for a movie..."
+            className="flex-1 bg-white/5 border border-white/10 rounded-lg px-4 py-2 outline-none focus:border-[#c2402f]/60 transition"
           />
           <button
             type="submit"
-            className="bg-blue-600 hover:bg-blue-700 transition rounded-lg px-6 py-2 font-medium"
+            className="bg-[#c2402f] hover:bg-[#a3362b] transition rounded-lg px-6 py-2 font-medium"
           >
-            Buscar
+            Search
           </button>
         </form>
 
-        {loading && <p className="text-neutral-400">Buscando...</p>}
+        {loading && <p className="text-neutral-400">Searching...</p>}
 
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
           {movies.map((movie) => {
             const isAdding = addingIds.includes(movie.id);
-            const isAdded = addedIds.includes(movie.id);
+            const isSaved = savedTmdbIds.includes(movie.id);
 
             return (
               <div
                 key={movie.id}
-                className="bg-neutral-900 rounded-lg overflow-hidden border border-neutral-800 hover:border-neutral-600 transition group"
+                className="bg-white/5 rounded-lg overflow-hidden border border-white/10 shadow-lg shadow-black/30 hover:border-[#c2402f]/40 hover:shadow-xl hover:shadow-black/50 hover:-translate-y-1 transition group"
               >
-                <div className="aspect-[2/3] bg-neutral-800 relative">
+                <div className="aspect-[2/3] bg-white/5 relative">
                   {movie.poster_path ? (
                     <img
                       src={`https://image.tmdb.org/t/p/w342${movie.poster_path}`}
@@ -101,7 +117,7 @@ export default function Home() {
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center text-neutral-600 text-sm p-2 text-center">
-                      Sem poster
+                      No poster
                     </div>
                   )}
                 </div>
@@ -114,18 +130,18 @@ export default function Home() {
                   </p>
                   <button
                     onClick={() => handleAdd(movie)}
-                    disabled={isAdding || isAdded}
+                    disabled={isAdding || isSaved}
                     className={`mt-2 w-full transition text-xs py-1.5 rounded ${
-                      isAdded
-                        ? "bg-emerald-600 cursor-default"
-                        : "bg-neutral-800 hover:bg-blue-600"
+                      isSaved
+                        ? "bg-[#d4af37]/15 text-[#d4af37] cursor-default"
+                        : "bg-white/10 hover:bg-[#c2402f]"
                     }`}
                   >
-                    {isAdded
-                      ? "✓ Adicionado"
+                    {isSaved
+                      ? "✓ Already in collection"
                       : isAdding
-                        ? "Adicionando..."
-                        : "+ Adicionar"}
+                        ? "Adding..."
+                        : "+ Add"}
                   </button>
                 </div>
               </div>

@@ -7,21 +7,30 @@ export async function PATCH(
 ) {
   const { id } = await params;
   const body = await request.json();
-  const { watched } = body;
+  const { watched, timesWatched, rating, notes, overview } = body;
+
+  const data: Record<string, unknown> = {};
+
+  if (watched !== undefined) {
+    data.watched = watched;
+    data.watchedAt = watched ? new Date() : null;
+    if (!watched) data.timesWatched = 0;
+  }
+  if (timesWatched !== undefined) data.timesWatched = timesWatched;
+  if (rating !== undefined) data.rating = rating;
+  if (notes !== undefined) data.notes = notes;
+  if (overview !== undefined) data.overview = overview;
 
   try {
     const movie = await prisma.movie.update({
       where: { id: Number(id) },
-      data: {
-        watched,
-        watchedAt: watched ? new Date() : null,
-      },
+      data,
     });
     return NextResponse.json(movie);
   } catch (error) {
     console.error(error);
     return NextResponse.json(
-      { error: "Erro ao atualizar filme" },
+      { error: "Failed to update movie" },
       { status: 500 },
     );
   }
@@ -39,7 +48,7 @@ export async function DELETE(
   } catch (error) {
     console.error(error);
     return NextResponse.json(
-      { error: "Erro ao remover filme" },
+      { error: "Failed to remove movie" },
       { status: 500 },
     );
   }

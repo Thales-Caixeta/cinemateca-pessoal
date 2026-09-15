@@ -1,6 +1,12 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Cinzel_Decorative } from "next/font/google";
+import {
+  Geist,
+  Geist_Mono,
+  Cinzel_Decorative,
+  Fraunces,
+} from "next/font/google";
 import Navbar from "@/components/Navbar";
+import AmbientBackground from "@/components/AmbientBackground";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -19,28 +25,28 @@ const cinzelDecorative = Cinzel_Decorative({
   weight: "700",
 });
 
+const fraunces = Fraunces({
+  variable: "--font-fraunces",
+  subsets: ["latin"],
+  weight: ["500", "600", "700"],
+});
+
 export const metadata: Metadata = {
   title: "Noctreel",
-  description: "App pessoal para catalogar e acompanhar filmes assistidos",
+  description: "Personal app to catalog and track watched movies",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="pt-BR"
-      className={`${geistSans.variable} ${geistMono.variable} ${cinzelDecorative.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${cinzelDecorative.variable} ${fraunces.variable} h-full antialiased`}
     >
       <body
-        className="min-h-full flex flex-col text-white pt-28 relative"
+        className="min-h-full flex flex-col text-white pt-23 relative"
         style={{ backgroundColor: "#171b24" }}
       >
-        <div
-          className="fixed inset-0 pointer-events-none -z-10"
-          style={{
-            backgroundImage:
-              "radial-gradient(ellipse 600px 900px at 0% 40%, rgba(120, 140, 200, 0.12), transparent), radial-gradient(ellipse 600px 900px at 100% 60%, rgba(120, 140, 200, 0.12), transparent)",
-          }}
-        />
+        <AmbientBackground />
         <Navbar />
         {children}
       </body>

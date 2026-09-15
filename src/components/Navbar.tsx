@@ -6,11 +6,11 @@ import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 const navItems = [
-  { href: "/", label: "Dashboard", bg: "bg-white/10" },
-  { href: "/buscar", label: "Buscar", bg: "bg-emerald-400/15" },
-  { href: "/colecao", label: "Coleção", bg: "bg-amber-400/15" },
-  { href: "/challenges", label: "Challenges", bg: "bg-orange-500/15" },
-  { href: "/stats", label: "Estatísticas", bg: "bg-violet-400/15" },
+  { href: "/", label: "Dashboard" },
+  { href: "/search", label: "Search" },
+  { href: "/collection", label: "Collection" },
+  { href: "/challenges", label: "Challenges" },
+  { href: "/stats", label: "Stats" },
 ];
 
 export default function Navbar() {
@@ -38,11 +38,15 @@ export default function Navbar() {
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 border-b border-white/5 bg-[#0d0f16]/80 backdrop-blur-md transition-transform duration-300 ${
+      className={`fixed top-0 left-0 right-0 z-50 bg-[#0d0f16]/95 backdrop-blur-md transition-transform duration-300 ${
         visible ? "translate-y-0" : "-translate-y-full"
       }`}
+      style={{
+        boxShadow:
+          "0 1px 0 0 rgba(194,64,47,0.3), 0 10px 30px -10px rgba(0,0,0,0.6)",
+      }}
     >
-      <div className="relative flex items-center justify-between px-6 py-4">
+      <div className="relative flex items-center justify-between px-6 h-23">
         <Link href="/" className="flex flex-col items-center gap-1">
           <Image
             src="/logo.png"
@@ -65,7 +69,7 @@ export default function Navbar() {
                 href={item.href}
                 className={`text-sm px-4 py-2 rounded-full transition ${
                   isActive
-                    ? `${item.bg} text-white`
+                    ? "bg-[#c2402f]/20 text-white ring-1 ring-[#c2402f]/40"
                     : "text-neutral-400 hover:text-neutral-200"
                 }`}
               >
@@ -77,7 +81,7 @@ export default function Navbar() {
 
         <div className="flex items-center gap-4">
           <button
-            aria-label="Buscar"
+            aria-label="Search"
             className="text-neutral-400 hover:text-white transition"
           >
             <svg

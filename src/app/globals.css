@@ -2,6 +2,8 @@
 
 :root {
   --foreground: #ededed;
+  --color-wine: #c2402f;
+  --color-gold: #d4af37;
 }
 
 @theme inline {
@@ -18,4 +20,26 @@ body {
 html,
 body {
   min-width: 1100px;
+}
+
+@keyframes stamp-slam {
+  0% {
+    transform: translateY(-60px) scale(1.35) rotate(-18deg);
+    opacity: 0;
+  }
+  55% {
+    transform: translateY(6px) scale(0.92) rotate(-1deg);
+    opacity: 1;
+  }
+  75% {
+    transform: translateY(-2px) scale(1.03) rotate(-4deg);
+  }
+  100% {
+    transform: translateY(0) scale(1) rotate(-3deg);
+  }
+}
+
+.animate-stamp-slam {
+  animation: stamp-slam 0.45s cubic-bezier(0.34, 1.2, 0.64, 1) both;
+  transform-origin: center;
 }
