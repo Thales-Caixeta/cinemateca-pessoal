@@ -49,6 +49,18 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <AmbientBackground />
         <Navbar />
         {children}
+        <footer className="relative mt-auto py-6 text-center text-[11px] text-neutral-600">
+          This product uses the{" "}
+          <a
+            href="https://www.themoviedb.org/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline hover:text-neutral-400 transition"
+          >
+            TMDB
+          </a>{" "}
+          API but is not endorsed or certified by TMDB.
+        </footer>
       </body>
     </html>
   );

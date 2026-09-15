@@ -52,6 +52,10 @@ App pessoal para catalogar e acompanhar filmes assistidos, com busca de metadata
 - **Challenge** — desafios/listas temáticas de filmes
 - **ChallengeMovie** — tabela de ligação entre desafios e filmes
 
+## Atribuição da TMDB
+
+Este produto usa a API da TMDB, mas não é endossado ou certificado pela TMDB. Isso é exigência dos [termos de uso da API](https://www.themoviedb.org/api-terms-of-use) (não é opcional) — o app exibe essa atribuição no rodapé de todas as páginas.
+
 ## Projeto pessoal
 
-Este é um projeto pessoal em desenvolvimento contínuo, sem fins comerciais.
+Este é um projeto pessoal em desenvolvimento contínuo, sem fins comerciais. Não é o tipo de uso que motiva ação legal na prática, mas a atribuição da TMDB é cumprida de qualquer forma, por ser condição de uso da API em si.
